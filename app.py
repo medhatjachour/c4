@@ -18,7 +18,7 @@ class MainWindow(QMainWindow):
         self.file = None
         self.ui.browse_file.clicked.connect(self.show_dialog)
         self.ui.delete_2.clicked.connect(self.delete_file)
-        self.ui.scrape.clicked.connect(self.show_data)
+        self.ui.scrape.clicked.connect(self.scrapeFunction)
         self.ui.delete_2.hide()
         self.ui.scrape.hide()
         self.ui.frame_2.hide()
@@ -54,15 +54,20 @@ class MainWindow(QMainWindow):
         self.ui.delete_2.hide()
         self.ui.scrape.hide()
         self.ui.frame_2.hide()
-
-    # Here a function to add the data
-    def show_data(self, data):
+    def scrapeFunction(self):
+        print("screpe")
+        # hide buttons frames 
         self.ui.frame.hide()
         self.ui.frame_2.hide()
+        
+    # Here a function to add the data
+    def show_data(self, data):
+
         self.add_label = QLabel()
         self.add_label.setFont(self.font)
         self.add_label.setMinimumHeight(25)
         self.ui.verticalLayout_13.addWidget(self.add_label)
+        # print(data)
         self.add_label.setText(data)
 
 
@@ -71,4 +76,5 @@ if __name__ == "__main__":
     window = MainWindow()
     window.show()
     window.show_data('First try')
+    window.show_data('seconde')
     sys.exit(app.exec())
