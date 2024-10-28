@@ -1,0 +1,8 @@
+aiohttp
+bs4
+openpyxl
+fake_useragent
+brotli
+requests
+pyinstaller
+PySide6

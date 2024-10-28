@@ -91,9 +91,9 @@ class Ui_MainWindow(object):
 "\n"
 "")
         icon = QIcon()
-        icon.addFile(u"imgs/delete.svg", QSize(), QIcon.Normal, QIcon.Off)
+        icon.addFile(u"icons/delete.svg", QSize(), QIcon.Normal, QIcon.Off)
         self.delete_2.setIcon(icon)
-        self.delete_2.setIconSize(QSize(37, 27))
+        self.delete_2.setIconSize(QSize(30, 20))
 
         self.horizontalLayout.addWidget(self.delete_2)
 

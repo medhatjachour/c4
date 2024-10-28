@@ -1,4 +1,4 @@
-#custom for waveneuro
+#custom for Brova
 
 
 #Below this are common python ignores
@@ -8,7 +8,6 @@ __pycache__/
 __pycache__
 *$py.class
 *.py[cod]
-.pyc
 
 # C extensions
 *.so
@@ -72,7 +71,7 @@ coverage.xml
 .hypothesis/
 .pytest_cache/
 cover/
-
+log.txt
 # Translations
 *.mo
 *.pot
@@ -103,6 +102,10 @@ target/
 # IPython
 profile_default/
 ipython_config.py
+C411.py
+C411ByPhone.py
+installer.nsi
+installer.txt
 
 # pyenv
 #   For a library or package, you might want to ignore these files since the code is
@@ -172,8 +175,19 @@ cython_debug/
 .qt_for_python
 *.vscode
 
+# MacOS
+.DS_Store
+
 
 tmp/
 EDFs/
 
 *.ipynb
+*.pyc
+
+
+# extra files
+*.exe
+*.zip
+*.rar
+build
