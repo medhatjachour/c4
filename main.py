@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'untitledFTLXPr.ui'
+## Form generated from reading UI file 'untitledTLaCws.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.2.3
 ##
@@ -26,6 +26,9 @@ class Ui_MainWindow(object):
         MainWindow.resize(800, 600)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
+        self.centralwidget.setStyleSheet(u"\n"
+"                background-color: #2e2e2e;\n"
+"                color: #ffffff;		")
         self.verticalLayout = QVBoxLayout(self.centralwidget)
         self.verticalLayout.setSpacing(0)
         self.verticalLayout.setObjectName(u"verticalLayout")
