@@ -6,7 +6,7 @@ from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog, QLabel
 from PySide6.QtGui import QFont, QIcon
 
 from main import Ui_MainWindow
-from C411ByPhone import update_sheet
+from yellow_pages import update_sheet
 
 
 class MainWindow(QMainWindow):
