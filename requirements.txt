@@ -6,3 +6,4 @@ brotli
 requests
 pyinstaller
 PySide6
+pandas
