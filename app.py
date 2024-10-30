@@ -17,7 +17,8 @@ from PySide6.QtCore import Signal, QObject, Slot, QThread
 
 from main import Ui_MainWindow
 from yellow_pages import update_sheet
-from widgets.fileName import Ui_Form
+from fileName import Ui_Form
+
 
 class UpdateWorker(QObject):
     progress = Signal(str)  # Signal for progress updates
@@ -65,6 +66,7 @@ class UpdateWorker(QObject):
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
+        self.labelFileName = None
         self.font = None
         self.add_label = None
         self.files_names = None
@@ -103,7 +105,6 @@ class MainWindow(QMainWindow):
             "Spreadsheet Files (*.xlsx *.xls *.gsheet *.ods)"
         )
 
-        print(self.files_names)
         self.files = self.files_names[0]
 
         for i in self.files:
@@ -111,14 +112,13 @@ class MainWindow(QMainWindow):
             self.ui.verticalLayout_14.addWidget(self.labelFileName)
             self.labelFileName.delete_2.clicked.connect(
                 partial(
-                    self.deleteFromMain,i
+                    self.delete_from_main, i
                 ))
         if self.files:
-        #     self.ui.label_file.setText(self.files)
-        #     self.ui.delete_2.show()
             self.ui.scrape.show()
             self.ui.frame_2.show()
-    def deleteFromMain(self,i):
+
+    def delete_from_main(self, i):
         self.files.remove(i)
         
         if len(self.files) == 0:
@@ -126,6 +126,7 @@ class MainWindow(QMainWindow):
             self.ui.scrape.hide()
             self.ui.frame_2.hide()
         print(self.files)
+
     def delete_file(self):
         self.stop_worker()
         self.files = None

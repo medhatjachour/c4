@@ -59,9 +59,9 @@ class Ui_Form(QFrame):
 "\n"
 "")
         icon = QIcon()
-        icon.addFile(u"../icons/trash2.svg", QSize(), QIcon.Normal, QIcon.Off)
+        icon.addFile(u"icons/trash.svg", QSize(), QIcon.Normal, QIcon.Off)
         self.delete_2.setIcon(icon)
-        self.delete_2.setIconSize(QSize(25, 25))
+        self.delete_2.setIconSize(QSize(20, 20))
 
         self.horizontalLayout_2.addWidget(self.delete_2)
 
