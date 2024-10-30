@@ -182,7 +182,7 @@ class MainWindow(QMainWindow):
     def show_data(self, data: str):
         self.add_label = QLabel()
         self.add_label.setFont(self.font)
-        self.add_label.setMinimumHeight(25)
+        self.add_label.setMinimumHeight(60)
         self.ui.verticalLayout_13.addWidget(self.add_label)
         self.add_label.setText(data)
 
