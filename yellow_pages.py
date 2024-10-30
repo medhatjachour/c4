@@ -78,60 +78,62 @@ async def get_new_data(response: str) -> tuple[str, str]:
 
 
 async def update_sheet(
-        file_path: str,
+        file_list: str,
         progress_callback: Callable[[str], Coroutine[Any, Any, None]]
 ) -> None:
     try:
-        # Load the spreadsheet
-        df = pd.read_excel(file_path)
-        if 'Phone' not in df.columns:
-            raise YellowPagesError("Spreadsheet must contain a 'Phone' column")
+        for file_path in file_list:
+            # Load the spreadsheet
+            await progress_callback(f"Working on {os.path.basename(file_path)} ....")
+            df = pd.read_excel(file_path)
+            if 'Phone' not in df.columns:
+                raise YellowPagesError("Spreadsheet must contain a 'Phone' column")
 
-        # Add new columns
-        df['Name2'] = None
-        df['Address2'] = None
+            # Add new columns
+            df['Name2'] = None
+            df['Address2'] = None
 
-        # Configure client session
-        conn = aiohttp.TCPConnector(limit=random.randint(25, 50))
-        timeout_config = aiohttp.ClientTimeout(total=30)
+            # Configure client session
+            conn = aiohttp.TCPConnector(limit=random.randint(25, 50))
+            timeout_config = aiohttp.ClientTimeout(total=30)
 
-        async with aiohttp.ClientSession(connector=conn, timeout=timeout_config) as session:
-            for index, row in df.iterrows():
-                try:
-                    # Skip if no phone number
-                    if pd.isna(row['Phone']):
-                        await progress_callback(f'Skipping row {index + 1}: No phone number')
-                        continue
+            async with aiohttp.ClientSession(connector=conn, timeout=timeout_config) as session:
+                for index, row in df.iterrows():
+                    try:
+                        # Skip if no phone number
+                        if pd.isna(row['Phone']):
+                            await progress_callback(f'Skipping row {index + 1}: No phone number')
+                            continue
 
-                    # Fetch and parse data
-                    url = f"https://www.canada411.ca/search/?pnum={row['Phone']}"
-                    response = await fetch(session, url)
-                    name2, address2 = await get_new_data(response)
+                        # Fetch and parse data
+                        url = f"https://www.canada411.ca/search/?pnum={row['Phone']}"
+                        response = await fetch(session, url)
+                        name2, address2 = await get_new_data(response)
 
-                    # Update dataframe
-                    df.at[index, 'Name2'] = name2
-                    df.at[index, 'Address2'] = address2
+                        # Update dataframe
+                        df.at[index, 'Name2'] = name2
+                        df.at[index, 'Address2'] = address2
 
-                    await progress_callback(
-                        f'Updated row {index + 1} for {row["Phone"]}:\n'
-                        f'Name2: {name2}\nAddress2: {address2}'
-                    )
+                        await progress_callback(
+                            f'Updated row {index + 1} for {row["Phone"]}:\n'
+                            f'Name2: {name2}\nAddress2: {address2}'
+                        )
 
-                    # Random delay
-                    await asyncio.sleep(random.uniform(1, 2))
+                        # Random delay
+                        await asyncio.sleep(random.uniform(1, 2))
 
-                except YellowPagesError as e:
-                    await progress_callback(f"Error processing row {index + 1}: {str(e)}")
-                except Exception as e:
-                    await progress_callback(f"Unexpected error in row {index + 1}: {str(e)}")
+                    except YellowPagesError as e:
+                        await progress_callback(f"Error processing row {index + 1}: {str(e)}")
+                    except Exception as e:
+                        await progress_callback(f"Unexpected error in row {index + 1}: {str(e)}")
 
-        # Save updated file
-        directory = os.path.dirname(file_path)
-        filename = os.path.basename(file_path)
-        new_path = os.path.join(directory, f"Updated_{filename}")
+            # Save updated file
+            directory = os.path.dirname(file_path)
+            filename = os.path.basename(file_path)
+            new_path = os.path.join(directory, f"Updated_{filename}")
 
-        df.to_excel(new_path, index=False)
-        await progress_callback(f"Saved updated data to: {new_path}")
+            df.to_excel(new_path, index=False)
+            await progress_callback(f"Saved updated data to: {new_path}")
 
     except Exception as e:
         raise YellowPagesError(f"Failed to update spreadsheet: {str(e)}")

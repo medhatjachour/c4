@@ -1,4 +1,5 @@
 import sys
+import os
 import asyncio
 import timeit
 from typing import Optional
@@ -83,7 +84,6 @@ class MainWindow(QMainWindow):
         self.setup_connections()
 
     def setup_ui(self):
-        # self.ui.delete_2.hide()
         self.ui.scrape.hide()
         self.ui.frame_2.hide()
 
@@ -106,9 +106,10 @@ class MainWindow(QMainWindow):
         )
 
         self.files = self.files_names[0]
-        print("from the  show ",self.files )
+        print("All files before deletion", self.files)
         for i in self.files:
-            self.labelFileName = Ui_Form(i)
+            file = os.path.basename(i)
+            self.labelFileName = Ui_Form(file)
             self.ui.verticalLayout_14.addWidget(self.labelFileName)
             self.labelFileName.delete_2.clicked.connect(
                 partial(
@@ -121,7 +122,7 @@ class MainWindow(QMainWindow):
 
     def delete_from_main(self, i):
         self.files.remove(i)
-        
+
         if len(self.files) == 0:
             self.ui.frame_3.hide()
             self.ui.scrape.hide()
@@ -131,8 +132,6 @@ class MainWindow(QMainWindow):
     def delete_file(self):
         self.stop_worker()
         self.files = None
-        # self.ui.label_file.setText("")
-        # self.ui.delete_2.hide()
         self.ui.scrape.hide()
         self.ui.frame_2.hide()
 
@@ -162,7 +161,7 @@ class MainWindow(QMainWindow):
         # Connect signals
         self.worker_thread.started.connect(self.worker.run)
         self.worker.progress.connect(self.show_data)
-        self.worker.finished.connect(self.on_scrape_complete)
+        self.worker.finished.connect(lambda time: self.on_scrape_complete(time))
         self.worker.error.connect(self.handle_error)
 
         # Start the thread
@@ -175,7 +174,6 @@ class MainWindow(QMainWindow):
         self.stop_worker()
         self.ui.scrape.setEnabled(True)
 
-    @Slot(float)
     def on_scrape_complete(self, exe_time: float):
         """Handle completion of the scraping process."""
         hours = exe_time // 3600
