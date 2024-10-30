@@ -106,7 +106,7 @@ class MainWindow(QMainWindow):
         )
 
         self.files = self.files_names[0]
-
+        print("from the  show ",self.files )
         for i in self.files:
             self.labelFileName = Ui_Form(i)
             self.ui.verticalLayout_14.addWidget(self.labelFileName)
@@ -117,6 +117,7 @@ class MainWindow(QMainWindow):
         if self.files:
             self.ui.scrape.show()
             self.ui.frame_2.show()
+            self.ui.frame_3.show()
 
     def delete_from_main(self, i):
         self.files.remove(i)
