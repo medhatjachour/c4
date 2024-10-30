@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'untitledTLaCws.ui'
+## Form generated from reading UI file 'untitledYmCzcU.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.2.3
 ##
@@ -23,7 +23,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(800, 600)
+        MainWindow.resize(883, 722)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.centralwidget.setStyleSheet(u"\n"
@@ -34,71 +34,119 @@ class Ui_MainWindow(object):
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.frame = QFrame(self.centralwidget)
         self.frame.setObjectName(u"frame")
-        self.frame.setMinimumSize(QSize(500, 68))
+        self.frame.setMinimumSize(QSize(500, 152))
         self.frame.setFrameShape(QFrame.StyledPanel)
         self.frame.setFrameShadow(QFrame.Raised)
         self.horizontalLayout = QHBoxLayout(self.frame)
-        self.horizontalLayout.setSpacing(19)
+        self.horizontalLayout.setSpacing(0)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
+        self.horizontalLayout.setContentsMargins(-1, 40, -1, 40)
         self.browse_file = QPushButton(self.frame)
         self.browse_file.setObjectName(u"browse_file")
-        self.browse_file.setMinimumSize(QSize(110, 30))
-        self.browse_file.setMaximumSize(QSize(110, 30))
+        self.browse_file.setMinimumSize(QSize(70, 70))
+        self.browse_file.setMaximumSize(QSize(70, 70))
         font = QFont()
-        font.setFamilies([u"Proxima Nova"])
+        font.setFamilies([u"Arial"])
+        font.setPointSize(35)
         font.setBold(True)
         self.browse_file.setFont(font)
         self.browse_file.setCursor(QCursor(Qt.PointingHandCursor))
         self.browse_file.setStyleSheet(u"\n"
-"font-family: Proxima Nova;\n"
-"font-size: 12px;\n"
-"font-weight: 600;\n"
-"line-height: 16px;\n"
 "text-align: center;\n"
-"background: rgba(3, 169, 244, 1);\n"
+"border:2px solid #fff ;\n"
 "color : white;\n"
-"border-radius: 12px;\n"
+"border-radius: 35px;\n"
 "\n"
 "")
 
         self.horizontalLayout.addWidget(self.browse_file)
 
-        self.label_file = QLabel(self.frame)
-        self.label_file.setObjectName(u"label_file")
-        self.label_file.setFont(font)
-        self.label_file.setStyleSheet(u"font-family: Proxima Nova;\n"
-"font-size: 10px;\n"
-"font-weight: 600;\n"
-"line-height: 16px;")
-        self.label_file.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
-
-        self.horizontalLayout.addWidget(self.label_file)
-
-        self.delete_2 = QPushButton(self.frame)
-        self.delete_2.setObjectName(u"delete_2")
-        self.delete_2.setMinimumSize(QSize(50, 30))
-        self.delete_2.setMaximumSize(QSize(50, 16777215))
-        self.delete_2.setCursor(QCursor(Qt.PointingHandCursor))
-        self.delete_2.setStyleSheet(u"\n"
-"font-family: Proxima Nova;\n"
-"font-size: 16px;\n"
-"font-weight: 700;\n"
-"line-height: 16px;\n"
-"text-align: center;\n"
-"background: rgb(255, 78, 24);\n"
-"color : white;\n"
-"border-radius: 4px;\n"
-"\n"
-"")
-        icon = QIcon()
-        icon.addFile(u"icons/delete.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.delete_2.setIcon(icon)
-        self.delete_2.setIconSize(QSize(30, 20))
-
-        self.horizontalLayout.addWidget(self.delete_2)
-
 
         self.verticalLayout.addWidget(self.frame)
+
+        self.frame_3 = QFrame(self.centralwidget)
+        self.frame_3.setObjectName(u"frame_3")
+        self.frame_3.setMinimumSize(QSize(0, 0))
+        self.frame_3.setMaximumSize(QSize(16777215, 16777215))
+        self.frame_3.setFrameShape(QFrame.StyledPanel)
+        self.frame_3.setFrameShadow(QFrame.Raised)
+        self.verticalLayout_2 = QVBoxLayout(self.frame_3)
+        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
+        self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
+        self.scrollArea_3 = QScrollArea(self.frame_3)
+        self.scrollArea_3.setObjectName(u"scrollArea_3")
+        self.scrollArea_3.setStyleSheet(u"QScrollBar:vertical{\n"
+"	border: none;\n"
+"	background-color: rgb(181, 196, 232);\n"
+"	width: 14px;	\n"
+"	margin: 15px 0px 15px 0px;\n"
+"	border-radius:0px;\n"
+"}\n"
+"QScrollBar::handle:vertical{\n"
+"	background-color: rgb(145, 145, 145);\n"
+"	min-height:30px;\n"
+"	border-radius:7px;\n"
+"}\n"
+"QScrollBar::handle:vertical:hover{\n"
+"	background-color: rgb(99, 99, 99);\n"
+"}\n"
+"QScrollBar::handle:vertical:pressed{\n"
+"	background-color: rgb(0, 0, 0);\n"
+"}\n"
+"QScrollBar::sub-line:vertical{\n"
+"	border:none;\n"
+"	background-color: rgb(194, 194, 194);\n"
+"	height:14px;\n"
+"	border-top-left-radius: 6px;\n"
+"	border-top-right-radius: 6px;\n"
+"	subcontrol-position:top;\n"
+"	subcontrol-origin:margin;\n"
+"}\n"
+"QScrollBar::sub-line:vertical:hover{\n"
+"background-color: rgb(134, 134, 134);\n"
+"}\n"
+"QScrollBar::sub-line:vertical:pressed{\n"
+"	background-color: rgb(1, 13, 89);\n"
+"}\n"
+"QScrollBar::add-line:vertical{\n"
+"\n"
+"	border:none;\n"
+"	background-color: rgb(194, 194, 194);\n"
+"	height:14px;\n"
+"	border-bottom"
+                        "-left-radius: 6px;\n"
+"	border-bottom-right-radius: 6px;\n"
+"	subcontrol-position:bottom;\n"
+"	subcontrol-origin:margin;\n"
+"}\n"
+"\n"
+"QScrollBar::add-line:vertical:hover{\n"
+"background-color: rgb(134, 134, 134);\n"
+"}\n"
+"QScrollBar::add-line:vertical:pressed{\n"
+"	background-color: rgb(1, 13, 89);\n"
+"}\n"
+"QScrollBar::up-arrow::vertical, QScrollBar::down-arrow:vertical{\n"
+"	border:none\n"
+"}\n"
+"QScrollBar::add-page::vertical, QScrollBar::sub-page:vertical{\n"
+"	border:none\n"
+"}\n"
+"")
+        self.scrollArea_3.setWidgetResizable(True)
+        self.scrollAreaWidgetContents_3 = QWidget()
+        self.scrollAreaWidgetContents_3.setObjectName(u"scrollAreaWidgetContents_3")
+        self.scrollAreaWidgetContents_3.setGeometry(QRect(0, 0, 861, 234))
+        self.verticalLayout_14 = QVBoxLayout(self.scrollAreaWidgetContents_3)
+        self.verticalLayout_14.setSpacing(0)
+        self.verticalLayout_14.setObjectName(u"verticalLayout_14")
+        self.verticalLayout_14.setContentsMargins(5, 0, 0, 0)
+        self.scrollArea_3.setWidget(self.scrollAreaWidgetContents_3)
+
+        self.verticalLayout_2.addWidget(self.scrollArea_3)
+
+
+        self.verticalLayout.addWidget(self.frame_3)
 
         self.error = QLabel(self.centralwidget)
         self.error.setObjectName(u"error")
@@ -207,7 +255,7 @@ class Ui_MainWindow(object):
         self.scrollArea_2.setWidgetResizable(True)
         self.scrollAreaWidgetContents_2 = QWidget()
         self.scrollAreaWidgetContents_2.setObjectName(u"scrollAreaWidgetContents_2")
-        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 780, 435))
+        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 863, 235))
         self.verticalLayout_13 = QVBoxLayout(self.scrollAreaWidgetContents_2)
         self.verticalLayout_13.setSpacing(0)
         self.verticalLayout_13.setObjectName(u"verticalLayout_13")
@@ -225,9 +273,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
-        self.browse_file.setText(QCoreApplication.translate("MainWindow", u"Browse Files", None))
-        self.label_file.setText("")
-        self.delete_2.setText("")
+        self.browse_file.setText(QCoreApplication.translate("MainWindow", u"+", None))
         self.error.setText("")
         self.scrape.setText(QCoreApplication.translate("MainWindow", u"Scrape", None))
     # retranslateUi

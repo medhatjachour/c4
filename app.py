@@ -4,6 +4,7 @@ import timeit
 from typing import Optional
 from pathlib import Path
 
+from functools import partial
 from PySide6.QtWidgets import (
     QApplication,
     QMainWindow,
@@ -16,7 +17,7 @@ from PySide6.QtCore import Signal, QObject, Slot, QThread
 
 from main import Ui_MainWindow
 from yellow_pages import update_sheet
-
+from widgets.fileName import Ui_Form
 
 class UpdateWorker(QObject):
     progress = Signal(str)  # Signal for progress updates
@@ -80,7 +81,7 @@ class MainWindow(QMainWindow):
         self.setup_connections()
 
     def setup_ui(self):
-        self.ui.delete_2.hide()
+        # self.ui.delete_2.hide()
         self.ui.scrape.hide()
         self.ui.frame_2.hide()
 
@@ -91,7 +92,7 @@ class MainWindow(QMainWindow):
     def setup_connections(self):
         """Setup signal/slot connections."""
         self.ui.browse_file.clicked.connect(self.show_dialog)
-        self.ui.delete_2.clicked.connect(self.delete_file)
+        # self.ui.delete_2.clicked.connect(self.delete_file)
         self.ui.scrape.clicked.connect(self.scrape_function)
 
     def show_dialog(self):
@@ -104,17 +105,32 @@ class MainWindow(QMainWindow):
 
         print(self.files_names)
         self.files = self.files_names[0]
+
+        for i in self.files:
+            self.labelFileName = Ui_Form(i)
+            self.ui.verticalLayout_14.addWidget(self.labelFileName)
+            self.labelFileName.delete_2.clicked.connect(
+                partial(
+                    self.deleteFromMain,i
+                ))
         if self.files:
-            self.ui.label_file.setText(self.files)
-            self.ui.delete_2.show()
+        #     self.ui.label_file.setText(self.files)
+        #     self.ui.delete_2.show()
             self.ui.scrape.show()
             self.ui.frame_2.show()
-
+    def deleteFromMain(self,i):
+        self.files.remove(i)
+        
+        if len(self.files) == 0:
+            self.ui.frame_3.hide()
+            self.ui.scrape.hide()
+            self.ui.frame_2.hide()
+        print(self.files)
     def delete_file(self):
         self.stop_worker()
         self.files = None
-        self.ui.label_file.setText("")
-        self.ui.delete_2.hide()
+        # self.ui.label_file.setText("")
+        # self.ui.delete_2.hide()
         self.ui.scrape.hide()
         self.ui.frame_2.hide()
 
@@ -130,7 +146,9 @@ class MainWindow(QMainWindow):
 
     def scrape_function(self):
         """Initialize and start the scraping process."""
+
         self.ui.frame.hide()
+        self.ui.frame_3.hide()
         self.ui.frame_2.hide()
         self.ui.scrape.setEnabled(False)
 

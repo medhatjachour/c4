@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>883</width>
+    <height>722</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -28,7 +28,7 @@
       <property name="minimumSize">
        <size>
         <width>500</width>
-        <height>68</height>
+        <height>152</height>
        </size>
       </property>
       <property name="frameShape">
@@ -39,26 +39,32 @@
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <property name="spacing">
-        <number>19</number>
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>40</number>
+       </property>
+       <property name="bottomMargin">
+        <number>40</number>
        </property>
        <item>
         <widget class="QPushButton" name="browse_file">
          <property name="minimumSize">
           <size>
-           <width>110</width>
-           <height>30</height>
+           <width>70</width>
+           <height>70</height>
           </size>
          </property>
          <property name="maximumSize">
           <size>
-           <width>110</width>
-           <height>30</height>
+           <width>70</width>
+           <height>70</height>
           </size>
          </property>
          <property name="font">
           <font>
-           <family>Proxima Nova</family>
-           <pointsize>-1</pointsize>
+           <family>Arial</family>
+           <pointsize>35</pointsize>
            <bold>true</bold>
           </font>
          </property>
@@ -67,88 +73,145 @@
          </property>
          <property name="styleSheet">
           <string notr="true">
-font-family: Proxima Nova;
-font-size: 12px;
-font-weight: 600;
-line-height: 16px;
 text-align: center;
-background: rgba(3, 169, 244, 1);
+border:2px solid #fff ;
 color : white;
-border-radius: 12px;
+border-radius: 35px;
 
 </string>
          </property>
          <property name="text">
-          <string>Browse Files</string>
+          <string>+</string>
          </property>
         </widget>
        </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <widget class="QFrame" name="frame_3">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
        <item>
-        <widget class="QLabel" name="label_file">
-         <property name="font">
-          <font>
-           <family>Proxima Nova</family>
-           <pointsize>-1</pointsize>
-           <bold>true</bold>
-          </font>
-         </property>
+        <widget class="QScrollArea" name="scrollArea_3">
          <property name="styleSheet">
-          <string notr="true">font-family: Proxima Nova;
-font-size: 10px;
-font-weight: 600;
-line-height: 16px;</string>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="delete_2">
-         <property name="minimumSize">
-          <size>
-           <width>50</width>
-           <height>30</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>50</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="cursor">
-          <cursorShape>PointingHandCursor</cursorShape>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">
-font-family: Proxima Nova;
-font-size: 16px;
-font-weight: 700;
-line-height: 16px;
-text-align: center;
-background: rgb(255, 78, 24);
-color : white;
-border-radius: 4px;
+          <string notr="true">QScrollBar:vertical{
+	border: none;
+	background-color: rgb(181, 196, 232);
+	width: 14px;	
+	margin: 15px 0px 15px 0px;
+	border-radius:0px;
+}
+QScrollBar::handle:vertical{
+	background-color: rgb(145, 145, 145);
+	min-height:30px;
+	border-radius:7px;
+}
+QScrollBar::handle:vertical:hover{
+	background-color: rgb(99, 99, 99);
+}
+QScrollBar::handle:vertical:pressed{
+	background-color: rgb(0, 0, 0);
+}
+QScrollBar::sub-line:vertical{
+	border:none;
+	background-color: rgb(194, 194, 194);
+	height:14px;
+	border-top-left-radius: 6px;
+	border-top-right-radius: 6px;
+	subcontrol-position:top;
+	subcontrol-origin:margin;
+}
+QScrollBar::sub-line:vertical:hover{
+background-color: rgb(134, 134, 134);
+}
+QScrollBar::sub-line:vertical:pressed{
+	background-color: rgb(1, 13, 89);
+}
+QScrollBar::add-line:vertical{
 
+	border:none;
+	background-color: rgb(194, 194, 194);
+	height:14px;
+	border-bottom-left-radius: 6px;
+	border-bottom-right-radius: 6px;
+	subcontrol-position:bottom;
+	subcontrol-origin:margin;
+}
+
+QScrollBar::add-line:vertical:hover{
+background-color: rgb(134, 134, 134);
+}
+QScrollBar::add-line:vertical:pressed{
+	background-color: rgb(1, 13, 89);
+}
+QScrollBar::up-arrow::vertical, QScrollBar::down-arrow:vertical{
+	border:none
+}
+QScrollBar::add-page::vertical, QScrollBar::sub-page:vertical{
+	border:none
+}
 </string>
          </property>
-         <property name="text">
-          <string/>
+         <property name="widgetResizable">
+          <bool>true</bool>
          </property>
-         <property name="icon">
-          <iconset>
-           <normaloff>imgs/delete.svg</normaloff>imgs/delete.svg</iconset>
-         </property>
-         <property name="iconSize">
-          <size>
-           <width>37</width>
-           <height>27</height>
-          </size>
-         </property>
+         <widget class="QWidget" name="scrollAreaWidgetContents_3">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>861</width>
+            <height>234</height>
+           </rect>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_14">
+           <property name="spacing">
+            <number>0</number>
+           </property>
+           <property name="leftMargin">
+            <number>5</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+          </layout>
+         </widget>
         </widget>
        </item>
       </layout>
@@ -315,8 +378,8 @@ QScrollBar::add-page::vertical, QScrollBar::sub-page:vertical{
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>780</width>
-         <height>435</height>
+         <width>863</width>
+         <height>235</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_13">
