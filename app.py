@@ -26,8 +26,8 @@ class UpdateWorker(QObject):
     finished = Signal(float)  # Signal for completion with elapsed time
     error = Signal(str)  # Signal for error handling
 
-    def __init__(self, file_path: str):
-        super().__init__()
+    def __init__(self, file_path: str, parent=None):
+        super().__init__(parent)
         self.file_path = file_path
         self._is_running = True
 
@@ -94,7 +94,6 @@ class MainWindow(QMainWindow):
     def setup_connections(self):
         """Setup signal/slot connections."""
         self.ui.browse_file.clicked.connect(self.show_dialog)
-        # self.ui.delete_2.clicked.connect(self.delete_file)
         self.ui.scrape.clicked.connect(self.scrape_function)
 
     def show_dialog(self):
@@ -154,8 +153,8 @@ class MainWindow(QMainWindow):
         self.ui.scrape.setEnabled(False)
 
         # Create and setup worker
-        self.worker = UpdateWorker(self.files)
-        self.worker_thread = QThread()
+        self.worker = UpdateWorker(self.files, self)
+        self.worker_thread = QThread(self)
         self.worker.moveToThread(self.worker_thread)
 
         # Connect signals
