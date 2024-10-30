@@ -1,201 +1,119 @@
-import tracemalloc
-import sys
+import requests
+import time
+# import ssl
+import random
+import pandas as pd
 import os
-import asyncio
-import timeit
-from typing import Optional
-from pathlib import Path
-
-from functools import partial
-from PySide6.QtWidgets import (
-    QApplication,
-    QMainWindow,
-    QFileDialog,
-    QLabel,
-    QMessageBox
-)
-from PySide6.QtGui import QFont, QIcon
-from PySide6.QtCore import Signal, QObject, Slot, QThread
-
-from main import Ui_MainWindow
-from yellow_pages import update_sheet
-from fileName import Ui_Form
-
-tracemalloc.start()
+from bs4 import BeautifulSoup
+from fake_useragent import UserAgent
 
 
-class UpdateWorker(QObject):
-    progress = Signal(str)  # Signal for progress updates
-    finished = Signal(float)  # Signal for completion with elapsed time
-    error = Signal(str)  # Signal for error handling
-
-    def __init__(self, files: list, parent=None):
-        super().__init__(parent)
-        self.files = files
-        self._is_running = True
-
-    def stop(self):
-        self._is_running = False
-
-    def run_update(self):
-        """Runs the update process."""
-        start = timeit.default_timer()
-
-        try:
-            update_sheet(self.files, self._emit_progress)
-        except Exception as e:
-            self.error.emit(f"Error during update: {str(e)}")
-            return
-
-        end = timeit.default_timer()
-        if self._is_running:
-            self.finished.emit(end - start)
-
-    def _emit_progress(self, data: str):
-        """Emit progress safely from the worker thread."""
-        if self._is_running:
-            self.progress.emit(data)
+class YellowPagesError(Exception):
+    """Custom exception for Yellow Pages specific errors."""
+    pass
 
 
-class MainWindow(QMainWindow):
-    def __init__(self):
-        super().__init__()
-        self.labelFileName = None
-        self.font = None
-        self.add_label = None
-        self.files_names = None
-        self.ui = Ui_MainWindow()
-        self.ui.setupUi(self)
-        self.show()
+def fetch(url, old=False):
+    try:
+        if old:
+            agents = [
+                "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36",
+                "Mozilla/5.0 (iPhone; CPU iPhone OS 16_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) "
+                "CriOS/114.0.5735.99 Mobile/15E148 Safari/604.1",
+                "Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.5735.57 Mobile "
+                "Safari/537.36",
+                "Mozilla/5.0 (Linux; Android 10; SM-A205U) AppleWebKit/537.36 (KHTML, like Gecko) "
+                "Chrome/114.0.5735.57 Mobile Safari/537.36",
+                "Mozilla/5.0 (Linux; Android 10; LM-Q720) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.5735.57 "
+                "Mobile Safari/537.36"
+            ]
+            agent = random.choice(agents)
+        else:
+            agent = UserAgent().random
 
-        self.files: Optional[str] = None
-        self.worker: Optional[UpdateWorker] = None
-        self.worker_thread: Optional[QThread] = None
+        headers = {
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+            'Accept-Encoding': 'gzip, deflate, br',
+            'Accept-Language': 'en-US,en;q=0.5',
+            'Referer': 'https://www.google.ca/',
+            'User-Agent': agent
+        }
 
-        # UI Setup
-        self.setup_ui()
-        self.setup_connections()
+        # ssl_context = ssl.create_default_context()
+        # ssl_context.check_hostname = False
+        # ssl_context.verify_mode = ssl.CERT_NONE
+        # with requests.get(url, headers=headers, ssl=ssl_context, timeout=15) as response:
 
-    def setup_ui(self):
-        self.ui.scrape.hide()
-        self.ui.frame_2.hide()
-
-        self.setWindowTitle("Yellow Pages")
-        self.setWindowIcon(QIcon('icons/app.ico'))
-        self.font = QFont("Proxima Nova", 10)
-
-    def setup_connections(self):
-        """Setup signal/slot connections."""
-        self.ui.browse_file.clicked.connect(self.show_dialog)
-        self.ui.scrape.clicked.connect(self.scrape_function)
-
-    def show_dialog(self):
-        self.files_names = QFileDialog.getOpenFileNames(
-            self,
-            "Choose Spreadsheet",
-            str(Path.cwd()),  # Start in user's current working directory
-            "Spreadsheet Files (*.xlsx *.xls *.gsheet *.ods)"
-        )
-
-        self.files = self.files_names[0]
-        print("All files before deletion", self.files)
-        for i in self.files:
-            file = os.path.basename(i)
-            self.labelFileName = Ui_Form(file)
-            self.ui.verticalLayout_14.addWidget(self.labelFileName)
-            self.labelFileName.delete_2.clicked.connect(
-                partial(
-                    self.delete_from_main, i
-                ))
-        if self.files:
-            self.ui.scrape.show()
-            self.ui.frame_2.show()
-            self.ui.frame_3.show()
-
-    def delete_from_main(self, i):
-        self.files.remove(i)
-
-        if len(self.files) == 0:
-            self.ui.frame_3.hide()
-            self.ui.scrape.hide()
-            self.ui.frame_2.hide()
-        print(self.files)
-
-    def delete_file(self):
-        self.stop_worker()
-        self.files = None
-        self.ui.scrape.hide()
-        self.ui.frame_2.hide()
-
-    def stop_worker(self):
-        """Safely stop the worker thread."""
-        if self.worker:
-            self.worker.stop()
-        if self.worker_thread and self.worker_thread.isRunning():
-            self.worker_thread.quit()
-            self.worker_thread.wait()
-        self.worker = None
-        self.worker_thread = None
-
-    def scrape_function(self):
-        """Initialize and start the scraping process."""
-        self.ui.frame.hide()
-        self.ui.frame_3.hide()
-        self.ui.frame_2.hide()
-        self.ui.scrape.setEnabled(False)
-
-        # Create and setup worker
-        self.worker = UpdateWorker(self.files)
-        self.worker_thread = QThread()
-        self.worker.moveToThread(self.worker_thread)
-
-        # Connect signals
-        self.worker_thread.started.connect(self.worker.run_update)
-        self.worker.progress.connect(self.show_data)
-        self.worker.finished.connect(self.on_scrape_complete)
-        self.worker.error.connect(self.handle_error)
-
-        # Start the thread
-        self.worker_thread.start()
-
-    @Slot(str)
-    def handle_error(self, error_message: str):
-        """Handle errors from the worker thread."""
-        QMessageBox.critical(self, "Error", error_message)
-        self.stop_worker()
-        self.ui.scrape.setEnabled(True)
-
-    def on_scrape_complete(self, exe_time: float):
-        """Handle completion of the scraping process."""
-        hours = exe_time // 3600
-        minutes = (exe_time % 3600) // 60
-        seconds = (exe_time % 3600) % 60
-
-        elapsed_time = (
-            f"\nProcess completed successfully!\n"
-            f"Total time: {int(hours)} hours, {int(minutes)} minutes, {round(seconds, 2)} seconds.\n"
-        )
-        self.show_data(elapsed_time)
-
-        # Clean up
-        self.stop_worker()
-        self.ui.scrape.setEnabled(True)
-
-    @Slot(str)
-    def show_data(self, data: str):
-        self.add_label = QLabel()
-        self.add_label.setFont(self.font)
-        self.add_label.setMinimumHeight(25)
-        self.ui.verticalLayout_13.addWidget(self.add_label)
-        self.add_label.setText(data)
-
-    def closeEvent(self, event):
-        self.stop_worker()
-        super().closeEvent(event)
+        with requests.get(url, headers=headers, timeout=15) as response:
+            if response.status_code != 200:
+                raise YellowPagesError(f"HTTP {response.status_code}: {response.reason}")
+            return response.text
+    except requests.exceptions.Timeout:
+        raise YellowPagesError(f"Timeout while fetching {url}")
+    except requests.exceptions.RequestException as e:
+        raise YellowPagesError(f"Network error while fetching {url}: {str(e)}")
+    except Exception as e:
+        raise YellowPagesError(f"Unexpected error while fetching {url}: {str(e)}")
 
 
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    window = MainWindow()
-    window.show()
-    sys.exit(app.exec())
+def get_new_data(response):
+    try:
+        soup = BeautifulSoup(response, 'html.parser')
+
+        name_elem = soup.find('h1', class_='vcard__name')
+        if not name_elem:
+            return '', ''
+
+        address_elem = soup.find('div', class_='c411Address vcard__address')
+        if not address_elem:
+            return name_elem.text.strip(), ''
+
+        return name_elem.text.strip(), address_elem.text.strip()
+
+    except Exception as e:
+        raise YellowPagesError(f"Error parsing response: {str(e)}")
+
+
+def update_sheet(file_list, progress_callback):
+    try:
+        for file_path in file_list:
+            progress_callback(f"Working on {os.path.basename(file_path)} ....")
+            df = pd.read_excel(file_path)
+            if 'Phone' not in df.columns:
+                raise YellowPagesError("Spreadsheet must contain a 'Phone' column")
+
+            df['Name2'] = None
+            df['Address2'] = None
+
+            for index, row in df.iterrows():
+                try:
+                    if pd.isna(row['Phone']):
+                        progress_callback(f'Skipping row {index + 1}: No phone number')
+                        continue
+
+                    url = f"https://www.canada411.ca/search/?pnum={row['Phone']}"
+                    response = fetch(url)
+                    name2, address2 = get_new_data(response)
+
+                    df.at[index, 'Name2'] = name2
+                    df.at[index, 'Address2'] = address2
+
+                    progress_callback(
+                        f'Updated row {index + 1} for {row["Phone"]}:\n'
+                        f'Name2: {name2}\nAddress2: {address2}'
+                    )
+
+                    time.sleep(random.uniform(1, 2))
+                except YellowPagesError as e:
+                    progress_callback(f"Error processing row {index + 1}: {str(e)}")
+                except Exception as e:
+                    progress_callback(f"Unexpected error in row {index + 1}: {str(e)}")
+
+            directory = os.path.dirname(file_path)
+            filename = os.path.basename(file_path)
+            new_path = os.path.join(directory, f"Updated_{filename}")
+            df.to_excel(new_path, index=False)
+            progress_callback(f"Saved updated data to: {new_path}")
+
+    except Exception as e:
+        raise YellowPagesError(f"Failed to update spreadsheet: {str(e)}")

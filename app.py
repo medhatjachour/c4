@@ -26,42 +26,32 @@ class UpdateWorker(QObject):
     finished = Signal(float)  # Signal for completion with elapsed time
     error = Signal(str)  # Signal for error handling
 
-    def __init__(self, file_path: str, parent=None):
+    def __init__(self, files: list, parent=None):
         super().__init__(parent)
-        self.file_path = file_path
+        self.files = files
         self._is_running = True
 
     def stop(self):
         self._is_running = False
 
-    async def _show_data_async(self, data: str):
-        """Thread-safe way to emit progress updates."""
-        if self._is_running:
-            self.progress.emit(data)
-
-    async def run_update(self):
-        """Runs the update process in the background thread."""
+    def run_update(self):
+        """Runs the update process."""
         start = timeit.default_timer()
 
         try:
-            await update_sheet(self.file_path, self._show_data_async)
+            update_sheet(self.files, self._emit_progress)
         except Exception as e:
             self.error.emit(f"Error during update: {str(e)}")
             return
 
+        end = timeit.default_timer()
         if self._is_running:
-            end = timeit.default_timer()
             self.finished.emit(end - start)
 
-    def run(self):
-        """Main entry point for the worker thread."""
-        try:
-            loop = asyncio.new_event_loop()
-            asyncio.set_event_loop(loop)
-            loop.run_until_complete(self.run_update())
-            loop.close()
-        except Exception as e:
-            self.error.emit(f"Critical error in worker thread: {str(e)}")
+    def _emit_progress(self, data: str):
+        """Emit progress safely from the worker thread."""
+        if self._is_running:
+            self.progress.emit(data)
 
 
 class MainWindow(QMainWindow):
@@ -141,26 +131,25 @@ class MainWindow(QMainWindow):
         if self.worker_thread and self.worker_thread.isRunning():
             self.worker_thread.quit()
             self.worker_thread.wait()
-            self.worker = None
-            self.worker_thread = None
+        self.worker = None
+        self.worker_thread = None
 
     def scrape_function(self):
         """Initialize and start the scraping process."""
-
         self.ui.frame.hide()
         self.ui.frame_3.hide()
         self.ui.frame_2.hide()
         self.ui.scrape.setEnabled(False)
 
         # Create and setup worker
-        self.worker = UpdateWorker(self.files, self)
-        self.worker_thread = QThread(self)
+        self.worker = UpdateWorker(self.files)
+        self.worker_thread = QThread()
         self.worker.moveToThread(self.worker_thread)
 
         # Connect signals
-        self.worker_thread.started.connect(self.worker.run)
+        self.worker_thread.started.connect(self.worker.run_update)
         self.worker.progress.connect(self.show_data)
-        self.worker.finished.connect(lambda time: self.on_scrape_complete(time))
+        self.worker.finished.connect(self.on_scrape_complete)
         self.worker.error.connect(self.handle_error)
 
         # Start the thread
